@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Media on Ian FitzPatrick</title>
+    <link>https://ifitzpat.github.io/talk/</link>
+    <description>Recent content in Media on Ian FitzPatrick</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 Ian FitzPatrick</copyright>
+    <lastBuildDate>Fri, 01 Jan 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://ifitzpat.github.io/talk/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hoe zitten vreemde talen in je hersenen opgeslagen?</title>
+      <link>https://ifitzpat.github.io/talk/kijk-vegte/</link>
+      <pubDate>Sun, 12 Jul 2015 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/talk/kijk-vegte/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>De meertaligheid van Victoria Koblenko</title>
+      <link>https://ifitzpat.github.io/talk/pavlov/</link>
+      <pubDate>Thu, 29 Nov 2012 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/talk/pavlov/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Wie mail zegt, denkt aan meel</title>
+      <link>https://ifitzpat.github.io/talk/nrc/</link>
+      <pubDate>Mon, 28 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/talk/nrc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Meertaligheid</title>
+      <link>https://ifitzpat.github.io/talk/hoe-zo/</link>
+      <pubDate>Tue, 15 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/talk/hoe-zo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Promovendus van de week</title>
+      <link>https://ifitzpat.github.io/talk/bnr/</link>
+      <pubDate>Tue, 15 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/talk/bnr/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

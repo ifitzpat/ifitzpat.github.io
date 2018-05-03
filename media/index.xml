@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Media on Ian FitzPatrick</title>
+    <link>https://ifitzpat.github.io/media/</link>
+    <description>Recent content in Media on Ian FitzPatrick</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 Ian FitzPatrick</copyright>
+    
+	<atom:link href="https://ifitzpat.github.io/media/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://ifitzpat.github.io/media/bnr/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/media/bnr/</guid>
+      <description>BNR nieuwsradio Lorem ipsum dolor sit amet</description>
+    </item>
+    
+  </channel>
+</rss>

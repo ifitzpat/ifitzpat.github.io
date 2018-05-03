@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>7 on Ian FitzPatrick</title>
+    <link>https://ifitzpat.github.io/publication_types/7/</link>
+    <description>Recent content in 7 on Ian FitzPatrick</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 Ian FitzPatrick</copyright>
+    <lastBuildDate>Wed, 16 Mar 2011 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://ifitzpat.github.io/publication_types/7/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Lexical interactions in non-native speech comprehension: Evidence from electro-encephalography, eye-tracking, and functional magnetic resonance imaging</title>
+      <link>https://ifitzpat.github.io/publication/lexical-interactions/</link>
+      <pubDate>Wed, 16 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/publication/lexical-interactions/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
