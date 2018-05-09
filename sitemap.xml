@@ -32,24 +32,6 @@
     
     <url>
     
-      <loc>https://ifitzpat.github.io/post/testpost/</loc>
-      <lastmod>2017-03-12T22:32:58+01:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://ifitzpat.github.io/post/testpost2/</loc>
-      <lastmod>2017-03-12T22:32:58+01:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>https://ifitzpat.github.io/tags/academic/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
     </url>
@@ -318,24 +300,6 @@
     <url>
     
       <loc>https://ifitzpat.github.io/media/</loc>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://ifitzpat.github.io/post/ox-hugo-test/</loc>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://ifitzpat.github.io/post/</loc>
-      <lastmod>2017-03-12T22:32:58+01:00</lastmod>
       <priority>0</priority>
     </url>
     

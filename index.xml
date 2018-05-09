@@ -100,65 +100,6 @@ is working as a Data Scientist at Jibes Data Analytics.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Test post</title>
-      <link>https://ifitzpat.github.io/post/testpost/</link>
-      <pubDate>Sun, 12 Mar 2017 22:32:58 +0100</pubDate>
-      
-      <guid>https://ifitzpat.github.io/post/testpost/</guid>
-      <description>&lt;h1 id=&#34;first-heading&#34;&gt;First heading&lt;/h1&gt;
-
-&lt;p&gt;Here is some text&lt;/p&gt;
-
-&lt;h2 id=&#34;second-level-heading&#34;&gt;Second level heading&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print(&amp;quot;hello world&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;third-level-heading&#34;&gt;Third level heading&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;echo $hostname
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;forth-level-heading&#34;&gt;Forth level heading&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-plantuml&#34;&gt;@startgantt
-[Prototype design] lasts 10 days
-[Code prototype] lasts 10 days
-[Write tests] lasts 5 days
-[Code prototype] starts at [Prototype design]&#39;s end
-[Write tests] starts at [Code prototype]&#39;s start
-@endgantt
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img src=&#34;gantt.png&#34; alt=&#34;gantt.png&#34; title=&#34;gantt.png&#34; /&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Test post</title>
-      <link>https://ifitzpat.github.io/post/testpost2/</link>
-      <pubDate>Sun, 12 Mar 2017 22:32:58 +0100</pubDate>
-      
-      <guid>https://ifitzpat.github.io/post/testpost2/</guid>
-      <description>&lt;h1 id=&#34;first-heading&#34;&gt;First heading&lt;/h1&gt;
-
-&lt;p&gt;Here is some text&lt;/p&gt;
-
-&lt;h2 id=&#34;second-level-heading&#34;&gt;Second level heading&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print(&amp;quot;hello world&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;third-level-heading&#34;&gt;Third level heading&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;echo $hostname
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;forth-level-heading&#34;&gt;Forth level heading&lt;/h4&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Accessing conceptual representations for speaking</title>
       <link>https://ifitzpat.github.io/publication/front-ebook/</link>
       <pubDate>Sat, 01 Oct 2016 00:00:00 +0000</pubDate>
@@ -245,6 +186,24 @@ is working as a Data Scientist at Jibes Data Analytics.&lt;/p&gt;
       <pubDate>Sat, 10 Mar 2012 00:00:00 +0000</pubDate>
       
       <guid>https://ifitzpat.github.io/publication/brain-lang/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Wie mail zegt, denkt aan meel</title>
+      <link>https://ifitzpat.github.io/talk/nrc/</link>
+      <pubDate>Mon, 28 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/talk/nrc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Lexical interactions in non-native speech comprehension: Evidence from electro-encephalography, eye-tracking, and functional magnetic resonance imaging</title>
+      <link>https://ifitzpat.github.io/publication/lexical-interactions/</link>
+      <pubDate>Wed, 16 Mar 2011 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/publication/lexical-interactions/</guid>
       <description></description>
     </item>
     
