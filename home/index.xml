@@ -69,12 +69,10 @@
     <item>
       <title>Teaching</title>
       <link>https://ifitzpat.github.io/home/teaching/</link>
-      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 09 May 2018 00:00:00 +0000</pubDate>
       
       <guid>https://ifitzpat.github.io/home/teaching/</guid>
-      <description>This is an example of using the custom widget to create your own homepage section.
-I am a teaching instructor for the following courses at University X:
- CS101: An intro to computer science CS102: An intro to computer science CS103: An intro to computer science CS104: An intro to computer science CS105: An intro to computer science CS106: An intro to computer science CS107: An intro to computer science  </description>
+      <description> Introduction to statistics using R (Bachelor), Heinrich-Heine Unviversität, Düsseldorf Introduction to experimental methods (Bachelor), Heinrich-Heine Unviversität, Düsseldorf Intorduction to neurolinguistics (Master), Heinrich-Heine Unviversität, Düsseldorf Neurocognitive aspects of bilingualism (Master), Heinrich-Heine Unviversität, Düsseldorf  </description>
     </item>
     
     <item>
