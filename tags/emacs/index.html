@@ -28,17 +28,17 @@
   <link rel="stylesheet" href="/css/hugo-academic.css">
   
 
-  <link rel="alternate" href="https://ifitzpat.github.io/post/index.xml" type="application/rss+xml" title="Ian FitzPatrick">
-  <link rel="feed" href="https://ifitzpat.github.io/post/index.xml" type="application/rss+xml" title="Ian FitzPatrick">
+  <link rel="alternate" href="https://ifitzpat.github.io/tags/emacs/index.xml" type="application/rss+xml" title="Ian FitzPatrick">
+  <link rel="feed" href="https://ifitzpat.github.io/tags/emacs/index.xml" type="application/rss+xml" title="Ian FitzPatrick">
 
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/apple-touch-icon.png">
 
-  <link rel="canonical" href="https://ifitzpat.github.io/post/">
+  <link rel="canonical" href="https://ifitzpat.github.io/tags/emacs/">
 
   
 
-  <title>Posts | Ian FitzPatrick</title>
+  <title>Emacs | Ian FitzPatrick</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#navbar-main" data-offset="71">
@@ -149,56 +149,20 @@
 
 <div class="universal-wrapper">
 
-  <h1>Posts</h1>
+  <h1>Emacs</h1>
 
   
 
   
   
   <div>
-    
     <h2><a href="https://ifitzpat.github.io/post/blog-setup/">Setting up this blog</a></h2>
-    
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2018-05-09 00:00:00 &#43;0200 CEST" itemprop="datePublished">
-      Wed, May 9, 2018
-    </time>
-  </span>
-
-  
-
-  
-  
-  
-  <span class="article-tags">
-    <i class="fa fa-tags"></i>
-    
-    <a href="/tags/emacs">emacs</a
-    >, 
-    
-    <a href="/tags/org">org</a
-    >, 
-    
-    <a href="/tags/mode">mode</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-    <div class="article-style"><p>
+    <div class="article-style">
       
       This blog is written in org-mode in Emacs, built by Hugo (Academic theme) and deployed via ox-hugo (see below for configuration) on github pages.
 ox-hugo configuration ;; &mdash;&mdash;&ndash; Hugo &mdash;&mdash;&ndash; (require &lsquo;ox-hugo) (setq org-hugo-default-section-directory &quot;post&quot;) ;; Populates only the EXPORT_FILE_NAME property in the inserted headline. (with-eval-after-load &lsquo;org-capture (defun org-hugo-new-subtree-post-capture-template () &quot;Returns <code>org-capture' template string for new Hugo post. See</code>org-capture-templates&rsquo; for more information.&quot; (let* ((title (read-from-minibuffer &quot;Post Title: &quot;)) ;Prompt to enter the post title (fname (org-hugo-slug title))) (mapconcat #&lsquo;identity `( ,(concat &quot;* TODO &quot; title) &quot;:PROPERTIES:&quot; ,(concat &quot;:EXPORT_FILE_NAME: &quot; fname) &quot;:END:&quot; &quot;%?
       
-    </p></div>
+    </div>
   </div>
   
 
