@@ -324,6 +324,48 @@ is working as a Data Scientist at Jibes Data Analytics.</p>
 
     
       
+        
+        
+
+
+<div class="article-list-item" itemscope itemprop="blogPost">
+  
+  
+  <h3 class="article-title" itemprop="name">
+    <a href="https://ifitzpat.github.io/post/blog-setup/" itemprop="url">Setting up this blog</a>
+  </h3>
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    <time datetime="0001-01-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+      Mon, Jan 1, 0001
+    </time>
+  </span>
+
+  
+
+  
+
+  
+
+</div>
+
+  <div class="article-style" itemprop="articleBody">
+    
+    This blog is written in org-mode in Emacs, built by Hugo (Academic theme) and deployed via ox-hugo (see below for configuration) on github pages.
+ox-hugo configuration ;; -------- Hugo -------- (require 'ox-hugo) (setq org-hugo-default-section-directory &quot;post&quot;) ;; Populates only the EXPORT_FILE_NAME property in the inserted headline. (with-eval-after-load 'org-capture (defun org-hugo-new-subtree-post-capture-template () &quot;Returns `org-capture' template string for new Hugo post. See `org-capture-templates' for more information.&quot; (let* ((title (read-from-minibuffer &quot;Post Title: &quot;)) ;Prompt to enter the post title (fname (org-hugo-slug title))) (mapconcat #'identity `( ,(concat &quot;* TODO &quot; title) &quot;:PROPERTIES:&quot; ,(concat &quot;:EXPORT_FILE_NAME: &quot; fname) &quot;:END:&quot; &quot;%?
+    
+  </div>
+  <p class="read-more">
+    <a href="https://ifitzpat.github.io/post/blog-setup/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
     
 
   </div>

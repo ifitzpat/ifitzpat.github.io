@@ -157,104 +157,7 @@
   
   <div>
     
-    <h2><a href="https://ifitzpat.github.io/post/testpost/">Test post</a></h2>
-    
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2017-03-12 22:32:58 &#43;0100 CET" itemprop="datePublished">
-      Sun, Mar 12, 2017
-    </time>
-  </span>
-
-  
-
-  
-
-  
-
-</div>
-
-    <div class="article-style"><p>
-      
-      <h1 id="first-heading">First heading</h1>
-
-<p>Here is some text</p>
-
-<h2 id="second-level-heading">Second level heading</h2>
-
-<pre><code class="language-python">print(&quot;hello world&quot;)
-</code></pre>
-
-<h3 id="third-level-heading">Third level heading</h3>
-
-<pre><code class="language-bash">echo $hostname
-</code></pre>
-
-<h4 id="forth-level-heading">Forth level heading</h4>
-
-<pre><code class="language-plantuml">@startgantt
-[Prototype design] lasts 10 days
-[Code prototype] lasts 10 days
-[Write tests] lasts 5 days
-[Code prototype] starts at [Prototype design]'s end
-[Write tests] starts at [Code prototype]'s start
-@endgantt
-</code></pre>
-
-<p><img src="gantt.png" alt="gantt.png" title="gantt.png" /></p>
-
-      
-    </p></div>
-  </div>
-  
-  <div>
-    
-    <h2><a href="https://ifitzpat.github.io/post/testpost2/">Test post</a></h2>
-    
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    <time datetime="2017-03-12 22:32:58 &#43;0100 CET" itemprop="datePublished">
-      Sun, Mar 12, 2017
-    </time>
-  </span>
-
-  
-
-  
-
-  
-
-</div>
-
-    <div class="article-style"><p>
-      
-      <h1 id="first-heading">First heading</h1>
-
-<p>Here is some text</p>
-
-<h2 id="second-level-heading">Second level heading</h2>
-
-<pre><code class="language-python">print(&quot;hello world&quot;)
-</code></pre>
-
-<h3 id="third-level-heading">Third level heading</h3>
-
-<pre><code class="language-bash">echo $hostname
-</code></pre>
-
-<h4 id="forth-level-heading">Forth level heading</h4>
-
-      
-    </p></div>
-  </div>
-  
-  <div>
-    
-    <h2><a href="https://ifitzpat.github.io/post/ox-hugo-test/">Ox-hugo test</a></h2>
+    <h2><a href="https://ifitzpat.github.io/post/blog-setup/">Setting up this blog</a></h2>
     
 
 <div class="article-metadata">
@@ -275,40 +178,8 @@
 
     <div class="article-style"><p>
       
-      
-
-<p>Here is some text</p>
-
-<h2 id="second-level-heading">Second level heading</h2>
-
-<pre><code class="language-python">print(&quot;hello world&quot;)
-</code></pre>
-
-<h3 id="third-level-heading">Third level heading</h3>
-
-<pre><code class="language-bash">echo $hostname
-</code></pre>
-
-<h4 id="forth-level-heading">Forth level heading</h4>
-
-<pre><code class="language-plantuml">@startgantt
-[Prototype design] lasts 10 days
-[Code prototype] lasts 10 days
-[Write tests] lasts 5 days
-[Code prototype] starts at [Prototype design]'s end
-[Write tests] starts at [Code prototype]'s start
-@endgantt
-</code></pre>
-
-
-<figure>
-    
-        <img src="/ox-hugo/gantt.png" />
-    
-    
-</figure>
-
-
+      This blog is written in org-mode in Emacs, built by Hugo (Academic theme) and deployed via ox-hugo (see below for configuration) on github pages.
+ox-hugo configuration ;; &mdash;&mdash;&ndash; Hugo &mdash;&mdash;&ndash; (require &lsquo;ox-hugo) (setq org-hugo-default-section-directory &quot;post&quot;) ;; Populates only the EXPORT_FILE_NAME property in the inserted headline. (with-eval-after-load &lsquo;org-capture (defun org-hugo-new-subtree-post-capture-template () &quot;Returns <code>org-capture' template string for new Hugo post. See</code>org-capture-templates&rsquo; for more information.&quot; (let* ((title (read-from-minibuffer &quot;Post Title: &quot;)) ;Prompt to enter the post title (fname (org-hugo-slug title))) (mapconcat #&lsquo;identity `( ,(concat &quot;* TODO &quot; title) &quot;:PROPERTIES:&quot; ,(concat &quot;:EXPORT_FILE_NAME: &quot; fname) &quot;:END:&quot; &quot;%?
       
     </p></div>
   </div>
