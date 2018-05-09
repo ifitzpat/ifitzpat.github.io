@@ -11,6 +11,52 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Setting up this blog</title>
+      <link>https://ifitzpat.github.io/post/blog-setup/</link>
+      <pubDate>Wed, 09 May 2018 00:00:00 +0200</pubDate>
+      
+      <guid>https://ifitzpat.github.io/post/blog-setup/</guid>
+      <description>
+
+&lt;p&gt;This blog is written in &lt;a href=&#34;https://www.orgmode.org&#34; target=&#34;_blank&#34;&gt;org-mode&lt;/a&gt; in &lt;a href=&#34;https://www.emacs.org&#34; target=&#34;_blank&#34;&gt;Emacs&lt;/a&gt;, built by &lt;a href=&#34;https://gohugo.io&#34; target=&#34;_blank&#34;&gt;Hugo&lt;/a&gt; (&lt;a href=&#34;https://themes.gohugo.io/academic/&#34; target=&#34;_blank&#34;&gt;Academic theme&lt;/a&gt;) and deployed via &lt;a href=&#34;https://github.com/kaushalmodi/ox-hugo&#34; target=&#34;_blank&#34;&gt;ox-hugo&lt;/a&gt;
+ (see below for configuration) on &lt;a href=&#34;https://pages.github.com&#34; target=&#34;_blank&#34;&gt;github pages&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;ox-hugo-configuration&#34;&gt;ox-hugo configuration&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;;; -------- Hugo --------
+(require &#39;ox-hugo)
+(setq org-hugo-default-section-directory &amp;quot;post&amp;quot;)
+;; Populates only the EXPORT_FILE_NAME property in the inserted headline.
+ (with-eval-after-load &#39;org-capture
+   (defun org-hugo-new-subtree-post-capture-template ()
+     &amp;quot;Returns `org-capture&#39; template string for new Hugo post.
+ See `org-capture-templates&#39; for more information.&amp;quot;
+     (let* ((title (read-from-minibuffer &amp;quot;Post Title: &amp;quot;)) ;Prompt to enter the post title
+            (fname (org-hugo-slug title)))
+       (mapconcat #&#39;identity
+                  `(
+                    ,(concat &amp;quot;* TODO &amp;quot; title)
+                    &amp;quot;:PROPERTIES:&amp;quot;
+                    ,(concat &amp;quot;:EXPORT_FILE_NAME: &amp;quot; fname)
+                    &amp;quot;:END:&amp;quot;
+                    &amp;quot;%?\n&amp;quot;)          ;Place the cursor here finally
+                  &amp;quot;\n&amp;quot;)))
+
+   (add-to-list &#39;org-capture-templates
+                &#39;(&amp;quot;h&amp;quot;                ;`org-capture&#39; binding + h
+                  &amp;quot;Hugo post&amp;quot;
+                  entry
+                  ;; It is assumed that below file is present in `org-directory&#39;
+                  ;; and that it has a &amp;quot;Blog Ideas&amp;quot; heading. It can even be a
+                  ;; symlink pointing to the actual location of all-posts.org!
+                  (file+olp &amp;quot;all-posts.org&amp;quot; &amp;quot;Blog Ideas&amp;quot;)
+                  (function org-hugo-new-subtree-post-capture-template))))
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Non-linear Chatbots</title>
       <link>https://ifitzpat.github.io/project/chatbots/</link>
       <pubDate>Fri, 27 Apr 2018 00:00:00 +0000</pubDate>
@@ -195,15 +241,6 @@ is working as a Data Scientist at Jibes Data Analytics.&lt;/p&gt;
       <pubDate>Mon, 28 Mar 2011 00:00:00 +0000</pubDate>
       
       <guid>https://ifitzpat.github.io/talk/nrc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Lexical interactions in non-native speech comprehension: Evidence from electro-encephalography, eye-tracking, and functional magnetic resonance imaging</title>
-      <link>https://ifitzpat.github.io/publication/lexical-interactions/</link>
-      <pubDate>Wed, 16 Mar 2011 00:00:00 +0000</pubDate>
-      
-      <guid>https://ifitzpat.github.io/publication/lexical-interactions/</guid>
       <description></description>
     </item>
     

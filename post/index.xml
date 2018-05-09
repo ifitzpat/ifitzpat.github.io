@@ -7,6 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017 Ian FitzPatrick</copyright>
+    <lastBuildDate>Wed, 09 May 2018 00:00:00 +0200</lastBuildDate>
     
 	<atom:link href="https://ifitzpat.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +15,7 @@
     <item>
       <title>Setting up this blog</title>
       <link>https://ifitzpat.github.io/post/blog-setup/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 09 May 2018 00:00:00 +0200</pubDate>
       
       <guid>https://ifitzpat.github.io/post/blog-setup/</guid>
       <description>This blog is written in org-mode in Emacs, built by Hugo (Academic theme) and deployed via ox-hugo (see below for configuration) on github pages.
