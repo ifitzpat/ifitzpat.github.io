@@ -54,6 +54,16 @@
 
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;I also wrote a short function to redeploy the blog from within emacs&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-lisp&#34;&gt;(defun if/deploy-blog ()
+  (interactive)
+  (let ((default-directory &amp;quot;/path/to/your/blog&amp;quot;))
+    (async-start-process &amp;quot;bash&amp;quot; (executable-find &amp;quot;bash&amp;quot;) nil &amp;quot;deploy.sh&amp;quot;)
+    )
+  )
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h2 id=&#34;helpful-links&#34;&gt;Helpful links&lt;/h2&gt;
 
 &lt;ul&gt;

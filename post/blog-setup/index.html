@@ -264,6 +264,16 @@
 
 </code></pre>
 
+<p>I also wrote a short function to redeploy the blog from within emacs</p>
+
+<pre><code class="language-lisp">(defun if/deploy-blog ()
+  (interactive)
+  (let ((default-directory &quot;/path/to/your/blog&quot;))
+    (async-start-process &quot;bash&quot; (executable-find &quot;bash&quot;) nil &quot;deploy.sh&quot;)
+    )
+  )
+</code></pre>
+
 <h2 id="helpful-links">Helpful links</h2>
 
 <ul>
