@@ -264,7 +264,7 @@
 
 </code></pre>
 
-<p>I also wrote a short function to redeploy the blog from within emacs</p>
+<p>I also wrote a short function to redeploy the blog from within emacs.</p>
 
 <pre><code class="language-lisp">(defun if/deploy-blog ()
   (interactive)
@@ -272,6 +272,34 @@
     (async-start-process &quot;bash&quot; (executable-find &quot;bash&quot;) nil &quot;deploy.sh&quot;)
     )
   )
+</code></pre>
+
+<p>This makes use of a simple bash script to auto commit and redeploy to github.</p>
+
+<pre><code class="language-bash">#!/bin/bash
+
+echo -e &quot;\033[0;32mDeploying updates to GitHub...\033[0m&quot;
+
+# Build the project.
+hugo -t academic # if using a theme, replace with `hugo -t &lt;YOURTHEME&gt;`
+
+# Go To Public folder
+cd public
+# Add changes to git.
+git add .
+
+# Commit changes.
+msg=&quot;rebuilding site `date`&quot;
+if [ $# -eq 1 ]
+  then msg=&quot;$1&quot;
+fi
+git commit -m &quot;$msg&quot;
+
+# Push source and build repos.
+git push origin master
+
+# Come Back up to the Project Root
+cd ..
 </code></pre>
 
 <h2 id="helpful-links">Helpful links</h2>
@@ -396,6 +424,8 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/matlab.min.js"></script>
       
       <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/clojure.min.js"></script>
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/languages/bash.min.js"></script>
       
 
       
