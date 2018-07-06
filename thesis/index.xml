@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Theses on Ian FitzPatrick</title>
+    <link>https://ifitzpat.github.io/thesis/</link>
+    <description>Recent content in Theses on Ian FitzPatrick</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017 Ian FitzPatrick</copyright>
+    <atom:link href="/thesis/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title></title>
+      <link>https://ifitzpat.github.io/thesis/index/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://ifitzpat.github.io/thesis/index/</guid>
+      <description>&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;&lt;!DOCTYPE html PUBLIC &#34;-//W3C//DTD XHTML 1.0 Transitional//EN&#34; &#34;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&#34;&gt;&lt;html xmlns=&#34;http://www.w3.org/1999/xhtml&#34;&gt;&lt;head&gt;&lt;title&gt;&lt;/title&gt;&lt;meta http-equiv=&#34;refresh&#34; content=&#34;0;url= /Thesis_IanFitzPatrick.pdf&#34; /&gt;
+    &lt;script&gt;
+      (function(i,s,o,g,r,a,m){i[&#39;GoogleAnalyticsObject&#39;]=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,&#39;script&#39;,&#39;//www.google-analytics.com/analytics.js&#39;,&#39;ga&#39;);
+
+      ga(&#39;create&#39;, &#39;UA-21288675-1&#39;, &#39;auto&#39;);
+      ga(&#39;send&#39;, &#39;pageview&#39;);
+
+      &lt;/script&gt;
+  &lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
