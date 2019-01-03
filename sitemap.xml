@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>https://ifitzpat.github.io/post/blog-setup/</loc>
+      <lastmod>2018-05-10T22:54:59+02:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>https://ifitzpat.github.io/project/chatbots/</loc>
       <lastmod>2018-04-27T00:00:00+00:00</lastmod>
     </url>
@@ -212,7 +221,7 @@
     
     <url>
     
-      <loc>https://ifitzpat.github.io/cv/index/</loc>
+      <loc>https://ifitzpat.github.io/cv/</loc>
     </url>
     
   
@@ -228,7 +237,7 @@
     
     <url>
     
-      <loc>https://ifitzpat.github.io/thesis/index/</loc>
+      <loc>https://ifitzpat.github.io/thesis/</loc>
     </url>
     
   
@@ -277,15 +286,6 @@
     <url>
     
       <loc>https://ifitzpat.github.io/categories/</loc>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://ifitzpat.github.io/cv/</loc>
       <priority>0</priority>
     </url>
     
@@ -383,26 +383,8 @@
     
     <url>
     
-      <loc>https://ifitzpat.github.io/post/blog-setup/</loc>
-      <lastmod>2018-05-10T22:54:59+02:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>https://ifitzpat.github.io/tags/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>https://ifitzpat.github.io/thesis/</loc>
       <priority>0</priority>
     </url>
     

@@ -8,7 +8,9 @@
     <language>en-us</language>
     <copyright>&amp;copy; 2018 Ian FitzPatrick</copyright>
     <lastBuildDate>Wed, 16 Mar 2011 00:00:00 +0000</lastBuildDate>
-    <atom:link href="/publication_types/7/" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="https://ifitzpat.github.io/publication_types/7/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Lexical interactions in non-native speech comprehension: Evidence from electro-encephalography, eye-tracking, and functional magnetic resonance imaging</title>
