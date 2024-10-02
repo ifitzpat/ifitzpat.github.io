@@ -14,8 +14,8 @@
   <link>https://ianfitzpatrick.eu/</link>
   <description><![CDATA[]]></description>
   <language>en</language>
-  <pubDate>Wed, 02 Oct 2024 15:28:32 +0200</pubDate>
-  <lastBuildDate>Wed, 02 Oct 2024 15:28:32 +0200</lastBuildDate>
+  <pubDate>Wed, 02 Oct 2024 15:42:45 +0200</pubDate>
+  <lastBuildDate>Wed, 02 Oct 2024 15:42:45 +0200</lastBuildDate>
   <generator>Emacs 29.4 Org-mode 9.6.15</generator>
   <webMaster>ian@ianfitzpatrick.eu (Ian FitzPatrick)</webMaster>
   <image>
@@ -45,8 +45,8 @@
     with one rather ugly (and probably unsafe) hack... For now it's good enough for my use
     case, but any input on how to do this the Right Way<sup>tm</sup> would be appreciated!
     </p>
-    <div id="outline-container-org0bf5b8f" class="outline-3">
-    <h3 id="org0bf5b8f"><span class="section-number-3">1.1.</span> Patching libnvidia-container</h3>
+    <div id="outline-container-org2d9994b" class="outline-3">
+    <h3 id="org2d9994b"><span class="section-number-3">1.1.</span> Patching libnvidia-container</h3>
     <div class="outline-text-3" id="text-1-1">
     <p>
     While building <code>libnvidia-container</code> appeared simple enough it continued to throw up errors
@@ -179,8 +179,8 @@
     </div>
     </div>
     </div>
-    <div id="outline-container-org4c34df7" class="outline-3">
-    <h3 id="org4c34df7"><span class="section-number-3">1.2.</span> Guix package definitions</h3>
+    <div id="outline-container-orge168cb9" class="outline-3">
+    <h3 id="orge168cb9"><span class="section-number-3">1.2.</span> Guix package definitions</h3>
     <div class="outline-text-3" id="text-1-2">
     <p>
     Now we can specify the required guix packages. Credits to <a href="https://gitlab.com/psyleft">Connor Clark</a> and <a href="https://gitlab.com/lucianolaratelli">Luciano Laratelli</a> for the initial work.
@@ -369,8 +369,8 @@
     </div>
     </div>
     </div>
-    <div id="outline-container-org4ec1878" class="outline-3">
-    <h3 id="org4ec1878"><span class="section-number-3">1.3.</span> Enabling nvidia-container-runtime in docker</h3>
+    <div id="outline-container-org515e4be" class="outline-3">
+    <h3 id="org515e4be"><span class="section-number-3">1.3.</span> Enabling nvidia-container-runtime in docker</h3>
     <div class="outline-text-3" id="text-1-3">
     <p>
     Once <code>nvidia-container-toolkit</code> is built and installed, Docker will need to be made aware of the runtime. To do so modify the
@@ -398,8 +398,8 @@
     </div>
     </div>
     </div>
-    <div id="outline-container-org171ceff" class="outline-3">
-    <h3 id="org171ceff"><span class="section-number-3">1.4.</span> Running an NVIDIA GPU enabled container</h3>
+    <div id="outline-container-org11ad7be" class="outline-3">
+    <h3 id="org11ad7be"><span class="section-number-3">1.4.</span> Running an NVIDIA GPU enabled container</h3>
     <div class="outline-text-3" id="text-1-4">
     <p>
     Now comes the ugly bit&#x2026;. <code>nvidia-container-toolkit</code> seems to bind mount certain binaries
@@ -420,7 +420,7 @@
     <p>
     Then in the Python process check whether we have access to the gpu:
     </p>
-    <pre class="example" id="org1618c64">
+    <pre class="example" id="org1ca66ef">
     Python 3.10.13 (main, Sep 11 2023, 13:44:35) [GCC 11.2.0] on linux
     Type "help", "copyright", "credits" or "license" for more information.
     &gt;&gt;&gt; import torch
@@ -431,8 +431,8 @@
     </pre>
     </div>
     </div>
-    <div id="outline-container-org576e00e" class="outline-3">
-    <h3 id="org576e00e"><span class="section-number-3">1.5.</span> Caveats</h3>
+    <div id="outline-container-org99ddee0" class="outline-3">
+    <h3 id="org99ddee0"><span class="section-number-3">1.5.</span> Caveats</h3>
     <div class="outline-text-3" id="text-1-5">
     <p>
     So how unsafe is this? Well, to my mind we're circumventing a level of isolation here and
@@ -450,8 +450,8 @@
     </p>
     </div>
     </div>
-    <div id="outline-container-org988edcc" class="outline-3">
-    <h3 id="org988edcc"><span class="section-number-3">1.6.</span> Comments</h3>
+    <div id="outline-container-orge29a1ae" class="outline-3">
+    <h3 id="orge29a1ae"><span class="section-number-3">1.6.</span> Comments</h3>
     <div class="outline-text-3" id="text-1-6">
     </div>
     </div>
