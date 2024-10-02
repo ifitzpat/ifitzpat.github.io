@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+     xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+     xmlns:georss="http://www.georss.org/georss"
+     xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+     xmlns:media="http://search.yahoo.com/mrss/"><channel>
+  <title>Ian FitzPatrick's Blog</title>
+  <atom:link href="https://ianfitzpatrick.eu/rss.xml" rel="self" type="application/rss+xml" />
+  <link>https://ianfitzpatrick.eu/</link>
+  <description><![CDATA[]]></description>
+  <language>en</language>
+  <pubDate>Wed, 02 Oct 2024 15:28:32 +0200</pubDate>
+  <lastBuildDate>Wed, 02 Oct 2024 15:28:32 +0200</lastBuildDate>
+  <generator>Emacs 29.4 Org-mode 9.6.15</generator>
+  <webMaster>ian@ianfitzpatrick.eu (Ian FitzPatrick)</webMaster>
+  <image>
+    <url>https://ianfitzpatrick.eu/images/me.JPG</url>
+    <title>Ian FitzPatrick's Blog</title>
+    <link>https://ianfitzpatrick.eu/</link>
+  </image>
+
+
+  <item>
+    <title>Running NVIDIA GPU enabled containers in GNU Guix</title>
+    <link>https://ianfitzpatrick.eu/guix-nvidia-docker/</link>
+    <author>ian@ianfitzpatrick.eu (Ian FitzPatrick)</author>
+    <guid isPermaLink="false">https://ianfitzpatrick.eu/guix-nvidia-docker/</guid>
+    <pubDate>Wed, 02 Oct 2024 00:00:00 +0200</pubDate>
+
+    <description><![CDATA[<p>
+    Running NVIDIA GPU enabled containers in GNU Guix
+    </p>
+    <p>
+    <img src="https://ianfitzpatrick.eu/images/gnu-with-nvidia.jpeg" alt="gnu-with-nvidia.jpeg" />
+    After trying in vain to get Pytorch with CUDA support to build on <a href="https://guix.gnu.org">GNU Guix</a> (there's a
+    <code>python-pytorch-with-cuda11</code> package on the <a href="https://github.com/guix-science/guix-science-nonfree">guix-science-nonfree</a> channel). I decided to have
+    a stab at <a href="https://gitlab.com/nonguix/nonguix/-/issues/266">this nonguix issue</a> and see if I could get the <code>nvidia-container-toolkit</code> running
+    on Guix, which would allow me to run a containerised version of Pytorch. TLDR; I managed to
+    get everything working and can now easily run (NVIDIA) gpu enabled docker containers, but
+    with one rather ugly (and probably unsafe) hack... For now it's good enough for my use
+    case, but any input on how to do this the Right Way<sup>tm</sup> would be appreciated!
+    </p>
+    <div id="outline-container-org0bf5b8f" class="outline-3">
+    <h3 id="org0bf5b8f"><span class="section-number-3">1.1.</span> Patching libnvidia-container</h3>
+    <div class="outline-text-3" id="text-1-1">
+    <p>
+    While building <code>libnvidia-container</code> appeared simple enough it continued to throw up errors
+    when I tried to start a container. Fortunately the good folk over at <a href="https://nixos.org">Nix</a> already had a
+    <a href="https://github.com/NixOS/nixpkgs/blob/a206ca147ce85feb07d8966a2c4c0c5029bd624a/pkgs/applications/virtualization/libnvidia-container/libnvc-ldconfig-and-path-fixes.patch">working solution</a> that pointed me in the right direction. It seems that libnvidia-container
+    uses ldcache to find the NVIDIA libraries that it needs at run-time. This doesn't seem to
+    work on Guix (or Nix) so the fix involved writing a small patch that provides the path to
+    the NVIDIA libraries manually. Out of convenience I opted for
+    <code>/run/current-system/profile/lib</code> as the base path for the libraries, but I could imagine it
+    would be neater to provide <code>/gnu/store</code> paths instead (not sure though). If you'd like to
+    follow along you'll need to save the following patch as <code>libnvidia-container.patch</code> along
+    with the guix package definition (below).
+    </p>
+    <div class="org-src-container">
+    <pre class="src src-diff"><span class="org-diff-header">diff --git a/src/ldcache.c b/src/ldcache.c</span>
+    <span class="org-diff-header">index 38bab05..ba922d9 100644</span>
+    <span class="org-diff-header">--- </span><span class="org-diff-header"><span class="org-diff-file-header">a/src/ldcache.c</span></span>
+    <span class="org-diff-header">+++ </span><span class="org-diff-header"><span class="org-diff-file-header">b/src/ldcache.c</span></span>
+    <span class="org-diff-hunk-header">@@ -108,40 +108,28 @@</span><span class="org-diff-function"> ldcache_close(struct ldcache *ctx)</span>
+    <span class="org-diff-context"> int</span>
+    <span class="org-diff-context"> ldcache_resolve(struct ldcache *ctx, uint32_t arch, const char *root, const char * const libs[],</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">    char *paths[], size_t size</span><span class="org-diff-removed"><span class="org-diff-refine-removed">, ldcache_select_fn select, void *select_ctx</span></span><span class="org-diff-removed">)</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">               char *paths[], size_t size)</span>
+    <span class="org-diff-context"> {</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        char path[PATH_MAX];</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        </span><span class="org-diff-removed"><span class="org-diff-refine-removed">struct header</span></span><span class="org-diff-removed">_</span><span class="org-diff-removed"><span class="org-diff-refine-removed">libc6</span></span><span class="org-diff-removed"> </span><span class="org-diff-removed"><span class="org-diff-refine-removed">*h;</span></span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        </span><span class="org-diff-removed"><span class="org-diff-refine-removed">int</span></span><span class="org-diff-removed"> </span><span class="org-diff-removed"><span class="org-diff-refine-removed">override;</span></span>
+    <span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        </span><span class="org-diff-removed"><span class="org-diff-refine-removed">h = (struct header</span></span><span class="org-diff-removed">_</span><span class="org-diff-removed"><span class="org-diff-refine-removed">libc6 *)ctx-&gt;ptr</span></span><span class="org-diff-removed">;</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        memset(paths, 0, size * sizeof(*paths));</span>
+    <span class="org-diff-indicator-removed">-</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        for (</span><span class="org-diff-removed"><span class="org-diff-refine-removed">uint32</span></span><span class="org-diff-removed">_t </span><span class="org-diff-removed"><span class="org-diff-refine-removed">i</span></span><span class="org-diff-removed"> = 0; </span><span class="org-diff-removed"><span class="org-diff-refine-removed">i</span></span><span class="org-diff-removed"> &lt; </span><span class="org-diff-removed"><span class="org-diff-refine-removed">h-&gt;nlibs</span></span><span class="org-diff-removed">; ++</span><span class="org-diff-removed"><span class="org-diff-refine-removed">i</span></span><span class="org-diff-removed">) {</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                </span><span class="org-diff-removed"><span class="org-diff-refine-removed">int32_t flags = h-&gt;libs[i].flags;</span></span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                </span><span class="org-diff-removed"><span class="org-diff-refine-removed">char *key =</span></span><span class="org-diff-removed"> (</span><span class="org-diff-removed"><span class="org-diff-refine-removed">char *)ctx-&gt;ptr + h-&gt;libs[i].key;</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                char *value =</span></span><span class="org-diff-removed"> (</span><span class="org-diff-removed"><span class="org-diff-refine-removed">char *)ctx-&gt;ptr + h-&gt;</span></span><span class="org-diff-removed">libs[</span><span class="org-diff-removed"><span class="org-diff-refine-removed">i</span></span><span class="org-diff-removed">]</span><span class="org-diff-removed"><span class="org-diff-refine-removed">.value;</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                if (!(flags &amp;</span></span><span class="org-diff-removed"> </span><span class="org-diff-removed"><span class="org-diff-refine-removed">LD</span></span><span class="org-diff-removed">_</span><span class="org-diff-removed"><span class="org-diff-refine-removed">ELF) || (flags &amp;</span></span><span class="org-diff-removed"> </span><span class="org-diff-removed"><span class="org-diff-refine-removed">LD_ARCH_MASK</span></span><span class="org-diff-removed">) </span><span class="org-diff-removed"><span class="org-diff-refine-removed">!= arch</span></span><span class="org-diff-removed">)</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                        </span><span class="org-diff-removed"><span class="org-diff-refine-removed">continue;</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                for</span></span><span class="org-diff-removed"> (</span><span class="org-diff-removed"><span class="org-diff-refine-removed">size_t j = 0; j &lt; size;</span></span><span class="org-diff-removed"> </span><span class="org-diff-removed"><span class="org-diff-refine-removed">++j</span></span><span class="org-diff-removed">) </span><span class="org-diff-removed"><span class="org-diff-refine-removed">{</span></span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                        </span><span class="org-diff-removed"><span class="org-diff-refine-removed">if (!str_has_prefix(key</span></span><span class="org-diff-removed">, libs[j])</span><span class="org-diff-removed"><span class="org-diff-refine-removed">)</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                                continue</span></span><span class="org-diff-removed">;</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                        if (path_resolve(ctx-&gt;err, path, </span><span class="org-diff-removed"><span class="org-diff-refine-removed">root</span></span><span class="org-diff-removed">, </span><span class="org-diff-removed"><span class="org-diff-refine-removed">value</span></span><span class="org-diff-removed">) &lt; 0)</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                                return (-1);</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                        if (</span><span class="org-diff-removed"><span class="org-diff-refine-removed">paths[j]</span></span><span class="org-diff-removed"> !</span><span class="org-diff-removed"><span class="org-diff-refine-removed">= NULL &amp;&amp; str</span></span><span class="org-diff-removed">_</span><span class="org-diff-removed"><span class="org-diff-refine-removed">equal(paths[j], path))</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                                continue;</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                        if ((override = select</span></span><span class="org-diff-removed">(ctx-&gt;err, </span><span class="org-diff-removed"><span class="org-diff-refine-removed">select_ctx, root, paths[j],</span></span><span class="org-diff-removed"> path)) </span><span class="org-diff-removed"><span class="org-diff-refine-removed">&lt; 0)</span></span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                                </span><span class="org-diff-removed"><span class="org-diff-refine-removed">return (-1)</span></span><span class="org-diff-removed">;</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                        </span><span class="org-diff-removed"><span class="org-diff-refine-removed">if (override) {</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                                free(paths[j]);</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed">                                paths[j] = xstrdup(ctx-&gt;err, path);</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                                if (paths[j] == NULL)</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                                        return (-1);</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                        </span><span class="org-diff-removed"><span class="org-diff-refine-removed">}</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                        break;</span></span><span class="org-diff-refine-removed">
+    </span><span class="org-diff-indicator-removed"><span class="org-diff-refine-removed">-</span></span><span class="org-diff-removed"><span class="org-diff-refine-removed">                }</span></span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        }</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        return (0);</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">  char path[PATH_MAX];</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">  </span><span class="org-diff-added"><span class="org-diff-refine-added">char</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">dir[PATH</span></span><span class="org-diff-added">_</span><span class="org-diff-added"><span class="org-diff-refine-added">MAX]</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">=</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">"/run/current</span></span><span class="org-diff-added">-</span><span class="org-diff-added"><span class="org-diff-refine-added">system/profile/lib";</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">//</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">Is</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">it</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">neater</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">to</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">refer</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">to</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">the</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">/gnu/store</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">path?</span></span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">  </span><span class="org-diff-added"><span class="org-diff-refine-added">char</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">lib[PATH</span></span><span class="org-diff-added">_</span><span class="org-diff-added"><span class="org-diff-refine-added">MAX]</span></span><span class="org-diff-added">;</span>
+    <span class="org-diff-indicator-added">+</span>
+    <span class="org-diff-indicator-added"><span class="org-diff-refine-added">+</span></span><span class="org-diff-added">  memset(paths, 0, size * sizeof(*paths));</span>
+    <span class="org-diff-indicator-added">+</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">  for (</span><span class="org-diff-added"><span class="org-diff-refine-added">size</span></span><span class="org-diff-added">_t </span><span class="org-diff-added"><span class="org-diff-refine-added">j</span></span><span class="org-diff-added"> = 0; </span><span class="org-diff-added"><span class="org-diff-refine-added">j</span></span><span class="org-diff-added"> &lt; </span><span class="org-diff-added"><span class="org-diff-refine-added">size</span></span><span class="org-diff-added">; ++</span><span class="org-diff-added"><span class="org-diff-refine-added">j</span></span><span class="org-diff-added">) {</span>
+    <span class="org-diff-indicator-added">+</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">    </span><span class="org-diff-added"><span class="org-diff-refine-added">if</span></span><span class="org-diff-added"> (</span><span class="org-diff-added"><span class="org-diff-refine-added">!strncmp</span></span><span class="org-diff-added">(libs[</span><span class="org-diff-added"><span class="org-diff-refine-added">j</span></span><span class="org-diff-added">]</span><span class="org-diff-added"><span class="org-diff-refine-added">,</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">"libvdpau</span></span><span class="org-diff-added">_</span><span class="org-diff-added"><span class="org-diff-refine-added">nvidia.so",</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">100</span></span><span class="org-diff-added">))</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">      </span><span class="org-diff-added"><span class="org-diff-refine-added">strcat</span></span><span class="org-diff-added">(</span><span class="org-diff-added"><span class="org-diff-refine-added">dir,</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">"/vdpau"</span></span><span class="org-diff-added">)</span><span class="org-diff-added"><span class="org-diff-refine-added">;</span></span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">    </span><span class="org-diff-added"><span class="org-diff-refine-added">snprintf(lib,</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">100,</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">"%s/%s",</span></span><span class="org-diff-added"> </span><span class="org-diff-added"><span class="org-diff-refine-added">dir</span></span><span class="org-diff-added">, libs[j]);</span>
+    <span class="org-diff-indicator-added">+</span>
+    <span class="org-diff-indicator-added"><span class="org-diff-refine-added">+</span></span><span class="org-diff-added">    if (path_resolve</span><span class="org-diff-added"><span class="org-diff-refine-added">_full</span></span><span class="org-diff-added">(ctx-&gt;err, path, </span><span class="org-diff-added"><span class="org-diff-refine-added">"/"</span></span><span class="org-diff-added">, </span><span class="org-diff-added"><span class="org-diff-refine-added">lib</span></span><span class="org-diff-added">) &lt; 0)</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">      return (-1);</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">    if (!</span><span class="org-diff-added"><span class="org-diff-refine-added">file</span></span><span class="org-diff-added">_</span><span class="org-diff-added"><span class="org-diff-refine-added">exists</span></span><span class="org-diff-added">(ctx-&gt;err, path))</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">      </span><span class="org-diff-added"><span class="org-diff-refine-added">continue</span></span><span class="org-diff-added">;</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">    paths[j] = xstrdup(ctx-&gt;err, path);</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">    if (paths[j] == NULL)</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">      return (-1);</span>
+    <span class="org-diff-indicator-added">+</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">  }</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">  return (0);</span>
+    <span class="org-diff-context"> }</span>
+    <span class="org-diff-header">diff --git a/src/ldcache.h b/src/ldcache.h</span>
+    <span class="org-diff-header">index 33d78dd..95b603e 100644</span>
+    <span class="org-diff-header">-</span><span class="org-diff-header"><span class="org-diff-refine-removed">--</span></span><span class="org-diff-header"> </span><span class="org-diff-header"><span class="org-diff-file-header"><span class="org-diff-refine-removed">a</span></span></span><span class="org-diff-header"><span class="org-diff-file-header">/src/ldcache.h</span></span>
+    <span class="org-diff-header">+</span><span class="org-diff-header"><span class="org-diff-refine-added">++</span></span><span class="org-diff-header"> </span><span class="org-diff-header"><span class="org-diff-file-header"><span class="org-diff-refine-added">b</span></span></span><span class="org-diff-header"><span class="org-diff-file-header">/src/ldcache.h</span></span>
+    <span class="org-diff-hunk-header">@@ -50,6 +50,6 @@</span><span class="org-diff-function"> void ldcache_init(struct ldcache *, struct error *, const char *);</span>
+    <span class="org-diff-context"> int  ldcache_open(struct ldcache *);</span>
+    <span class="org-diff-context"> int  ldcache_close(struct ldcache *);</span>
+    <span class="org-diff-context"> int  ldcache_resolve(struct ldcache *, uint32_t, const char *, const char * const [],</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">    char *[], size_t</span><span class="org-diff-removed"><span class="org-diff-refine-removed">, ldcache_select_fn, void *</span></span><span class="org-diff-removed">);</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">    char *[], size_t);</span>
+    <span class="org-diff-context"> #endif /* HEADER_LDCACHE_H */</span>
+    <span class="org-diff-header">diff --git a/src/nvc_info.c b/src/nvc_info.c</span>
+    <span class="org-diff-header">index 85c9a4d..2464299 100644</span>
+    <span class="org-diff-header">-</span><span class="org-diff-header"><span class="org-diff-refine-removed">--</span></span><span class="org-diff-header"> </span><span class="org-diff-header"><span class="org-diff-file-header"><span class="org-diff-refine-removed">a</span></span></span><span class="org-diff-header"><span class="org-diff-file-header">/src/nvc_info.c</span></span>
+    <span class="org-diff-header">+</span><span class="org-diff-header"><span class="org-diff-refine-added">++</span></span><span class="org-diff-header"> </span><span class="org-diff-header"><span class="org-diff-file-header"><span class="org-diff-refine-added">b</span></span></span><span class="org-diff-header"><span class="org-diff-file-header">/src/nvc_info.c</span></span>
+    <span class="org-diff-hunk-header">@@ -216,15 +216,15 @@</span><span class="org-diff-function"> find_library_paths(struct error *err, struct dxcore_context *dxcore, struct nvc_</span>
+    <span class="org-diff-context">         if (path_resolve_full(err, path, root, ldcache) &lt; 0)</span>
+    <span class="org-diff-context">                 return (-1);</span>
+    <span class="org-diff-context">         ldcache_init(&amp;ld, err, path);</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        if (ldcache_open(&amp;ld) &lt; 0)</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                return (-1);</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">        </span><span class="org-diff-added"><span class="org-diff-refine-added">//</span></span><span class="org-diff-added">if (ldcache_open(&amp;ld) &lt; 0)</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">        </span><span class="org-diff-added"><span class="org-diff-refine-added">//</span></span><span class="org-diff-added">        return (-1);</span>
+    <span class="org-diff-context">         info-&gt;nlibs = size;</span>
+    <span class="org-diff-context">         info-&gt;libs = array_new(err, size);</span>
+    <span class="org-diff-context">         if (info-&gt;libs == NULL)</span>
+    <span class="org-diff-context">                 goto fail;</span>
+    <span class="org-diff-context">         if (ldcache_resolve(&amp;ld, LIB_ARCH, root, libs,</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">            info-&gt;libs, info-&gt;nlibs</span><span class="org-diff-removed"><span class="org-diff-refine-removed">, select_libraries_fn, info</span></span><span class="org-diff-removed">) &lt; 0)</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">            info-&gt;libs, info-&gt;nlibs) &lt; 0)</span>
+    <span class="org-diff-context">                 goto fail;</span>
+    <span class="org-diff-context">         info-&gt;nlibs32 = size;</span>
+    <span class="org-diff-hunk-header">@@ -232,13 +232,13 @@</span><span class="org-diff-function"> find_library_paths(struct error *err, struct dxcore_context *dxcore, struct nvc_</span>
+    <span class="org-diff-context">         if (info-&gt;libs32 == NULL)</span>
+    <span class="org-diff-context">                 goto fail;</span>
+    <span class="org-diff-context">         if (ldcache_resolve(&amp;ld, LIB32_ARCH, root, libs,</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">            info-&gt;libs32, info-&gt;nlibs32, select_libraries_fn, info) &lt; 0)</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">            info-&gt;libs32, info-&gt;nlibs32) &lt; 0)</span>
+    <span class="org-diff-context">                 goto fail;</span>
+    <span class="org-diff-context">         rv = 0;</span>
+    <span class="org-diff-context">  fail:</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">        if (ldcache_close(&amp;ld) &lt; 0)</span>
+    <span class="org-diff-indicator-removed">-</span><span class="org-diff-removed">                return (-1);</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">        //if (ldcache_close(&amp;ld) &lt; 0)</span>
+    <span class="org-diff-indicator-added">+</span><span class="org-diff-added">        //        return (-1);</span>
+    <span class="org-diff-context">         return (rv);</span>
+    }
+    </pre>
+    </div>
+    </div>
+    </div>
+    <div id="outline-container-org4c34df7" class="outline-3">
+    <h3 id="org4c34df7"><span class="section-number-3">1.2.</span> Guix package definitions</h3>
+    <div class="outline-text-3" id="text-1-2">
+    <p>
+    Now we can specify the required guix packages. Credits to <a href="https://gitlab.com/psyleft">Connor Clark</a> and <a href="https://gitlab.com/lucianolaratelli">Luciano Laratelli</a> for the initial work.
+    </p>
+    <div class="org-src-container">
+    <pre class="src src-scheme">(<span class="org-keyword">define-module</span> (<span class="org-type">babelfish</span> packages nvidia-docker) <span class="org-comment-delimiter">;; </span><span class="org-comment">adapt module name for your own use</span>
+    <span class="org-builtin">#:use-module</span> (guix gexp)
+    <span class="org-builtin">#:use-module</span> (guix git-download)
+    <span class="org-builtin">#:use-module</span> (guix utils)
+    <span class="org-builtin">#:use-module</span> (guix build utils)
+    <span class="org-builtin">#:use-module</span> (guix packages)
+    <span class="org-builtin">#:use-module</span> (guix build-system go)
+    <span class="org-builtin">#:use-module</span> (guix build-system gnu)
+    <span class="org-builtin">#:use-module</span> (guix licenses)
+    <span class="org-builtin">#:use-module</span> (gnu packages)
+    <span class="org-builtin">#:use-module</span> (gnu packages docker)
+    <span class="org-builtin">#:use-module</span> (gnu packages commencement)
+    <span class="org-builtin">#:use-module</span> (gnu packages onc-rpc)
+    <span class="org-builtin">#:use-module</span> (gnu packages golang)
+    <span class="org-builtin">#:use-module</span> (gnu packages check)
+    <span class="org-builtin">#:use-module</span> (gnu packages base)
+    <span class="org-builtin">#:use-module</span> (gnu packages curl)
+    <span class="org-builtin">#:use-module</span> (gnu packages version-control)
+    <span class="org-builtin">#:use-module</span> (gnu packages pkg-config)
+    <span class="org-builtin">#:use-module</span> (gnu packages gcc)
+    <span class="org-builtin">#:use-module</span> (gnu packages tls)
+    <span class="org-builtin">#:use-module</span> (gnu packages elf)
+    <span class="org-builtin">#:use-module</span> (gnu packages m4)
+    <span class="org-builtin">#:use-module</span> (gnu packages linux)
+    <span class="org-builtin">#:use-module</span> (nongnu packages nvidia))
+    (<span class="org-keyword">define-public</span> <span class="org-function-name">nvidia-modprobe</span>
+    (package
+    (name <span class="org-string">"nvidia-modprobe"</span>)
+    (version <span class="org-string">"550.54.14"</span>)
+    (source (origin
+    (method git-fetch)
+    (uri (git-reference
+    (url <span class="org-string">"https://github.com/NVIDIA/nvidia-modprobe"</span>)
+    (commit version)))
+    (file-name (git-file-name name version))
+    (sha256
+    (base32 <span class="org-string">"1a7q03pnwk3wa0p57whwv2mvz60bv77vvvaljqzwnscpyf94q548"</span>))))
+    (build-system gnu-build-system)
+    (arguments
+    (list
+    <span class="org-builtin">#:phases</span>
+    #~(modify-phases %standard-phases
+    (delete 'configure)
+    (add-before 'build 'set-correct-cflags
+    (lambda* (<span class="org-builtin">#:key</span> inputs outputs <span class="org-builtin">#:allow-other-keys</span>)
+    (setenv <span class="org-string">"CFLAGS"</span> <span class="org-string">"-fPIC"</span>)
+    (display <span class="org-string">"setting CFLAGS\n"</span>)
+    (substitute* <span class="org-string">"modprobe-utils/nvidia-modprobe-utils.c"</span>
+    ((<span class="org-string">"^static int nvidia_cap_get_device_file_attrs"</span>)
+    <span class="org-string">"int nvidia_cap_get_device_file_attrs"</span>))
+    )
+    )
+    (add-after 'build 'build-static-link-libraries
+    (lambda* (<span class="org-builtin">#:key</span> inputs outputs <span class="org-builtin">#:allow-other-keys</span>)
+    (invoke <span class="org-string">"ar"</span> <span class="org-string">"rcs"</span> <span class="org-string">"_out/Linux_x86_64/libnvidia-modprobe-utils.a"</span> <span class="org-string">"_out/Linux_x86_64/nvidia-modprobe-utils.o"</span> <span class="org-string">"_out/Linux_x86_64/pci-sysfs.o"</span>)
+    (copy-recursively <span class="org-string">"_out/Linux_x86_64/"</span> (string-append (assoc-ref %outputs <span class="org-string">"out"</span>) <span class="org-string">"/lib"</span>))))
+    (delete 'check)
+    (add-after 'patch-source-shebangs 'replace-prefix
+    (lambda* (<span class="org-builtin">#:key</span> inputs outputs <span class="org-builtin">#:allow-other-keys</span>)
+    (setenv <span class="org-string">"CC"</span> <span class="org-string">"gcc"</span>)
+    (setenv <span class="org-string">"PREFIX"</span> (assoc-ref %outputs <span class="org-string">"out"</span>))
+    (copy-recursively <span class="org-string">"modprobe-utils/"</span> (string-append (assoc-ref %outputs <span class="org-string">"out"</span>) <span class="org-string">"/include"</span>))
+    #true) <span class="org-comment-delimiter">; </span><span class="org-comment">must return true for success</span>
+    ))
+    <span class="org-builtin">#:tests?</span> #f))
+    (native-inputs
+    (list gcc-toolchain m4))
+    (synopsis <span class="org-string">"Load the NVIDIA kernel module and create NVIDIA character device files"</span>)
+    (description <span class="org-string">"Load the NVIDIA kernel module and create NVIDIA character device files"</span>)
+    (home-page <span class="org-string">"https://github.com/NVIDIA/nvidia-modprobe"</span>)
+    (license gpl2)))
+    (<span class="org-keyword">define-public</span> <span class="org-function-name">libnvidia-container</span>
+    (package
+    (name <span class="org-string">"libnvidia-container"</span>)
+    (version <span class="org-string">"1.13.1"</span>)
+    (source (origin
+    (method git-fetch)
+    (uri (git-reference
+    (url <span class="org-string">"https://github.com/NVIDIA/libnvidia-container"</span>)
+    (commit (string-append <span class="org-string">"v"</span> version))))
+    (file-name (git-file-name name version))
+    (patches (search-patches <span class="org-string">"libnvidia-container.patch"</span>))
+    (sha256
+    (base32
+    <span class="org-string">"0rzvh1zhh8pi5xjzaq3nmyzpcvjy41gq8w36dp1ai11a6j2lpa99"</span>))))
+    (build-system gnu-build-system)
+    (arguments
+    (list
+    <span class="org-builtin">#:phases</span>
+    #~(modify-phases %standard-phases
+    (delete 'configure)
+    (delete 'build)
+    (delete 'check)
+    (add-after 'unpack 'ensure-writable-source
+    (lambda* (<span class="org-builtin">#:key</span> inputs outputs <span class="org-builtin">#:allow-other-keys</span>)
+    (setenv <span class="org-string">"HOME"</span> <span class="org-string">"/tmp"</span>)
+    (make-file-writable <span class="org-string">"src/ldcache.c"</span>)
+    (make-file-writable <span class="org-string">"src/ldcache.h"</span>)
+    (make-file-writable <span class="org-string">"src/nvc_info.c"</span>)))
+    (add-after 'patch-source-shebangs 'replace-prefix
+    (lambda* (<span class="org-builtin">#:key</span> inputs outputs <span class="org-builtin">#:allow-other-keys</span>)
+    (substitute* <span class="org-string">"Makefile"</span>
+    ((<span class="org-string">"/usr/local"</span>) (assoc-ref outputs <span class="org-string">"out"</span>))  <span class="org-comment-delimiter">;</span><span class="org-comment">this overrides the prefix</span>
+    ((<span class="org-string">"debug??libdir?"</span>) <span class="org-string">"debug"</span>)  <span class="org-comment-delimiter">;</span><span class="org-comment">ensure debug files get installed in the correct subdir</span>
+    ((<span class="org-string">".*nvidia-modprobe.mk.*"</span>) <span class="org-string">"\n"</span>)
+    ((<span class="org-string">"^all: shared static tools"</span>)
+    <span class="org-string">"all: shared tools"</span>)
+    ((<span class="org-string">".*LIB_STATIC.*libdir.*$"</span>) <span class="org-string">""</span>))
+    (substitute* <span class="org-string">"mk/nvcgo.mk"</span>
+    ((<span class="org-string">".*-rf.*"</span>)
+    <span class="org-string">"\tmkdir -p ${SRCS_DIR} &amp;&amp; echo \"sources dir: ${SRCS_DIR}\"\n"</span>)
+    ((<span class="org-string">"CURDIR./src/..PREFIX."</span>)
+    <span class="org-string">"CURDIR)/src/$(PREFIX)/*"</span>)) <span class="org-comment-delimiter">;</span><span class="org-comment">deleting sources fails</span>
+    (substitute* <span class="org-string">"src/cli/libnvc.c"</span>
+    ((<span class="org-string">"libnvidia-ml.so.1"</span>)
+    <span class="org-string">"/run/current-system/profile/lib/libnvidia-ml.so.1"</span>))
+    (substitute* <span class="org-string">"src/nvc_internal.h"</span>
+    ((<span class="org-string">"libnvidia-ml.so.1"</span>)
+    <span class="org-string">"/run/current-system/profile/lib/libnvidia-ml.so.1"</span>))
+    (setenv <span class="org-string">"C_INCLUDE_PATH"</span> (string-append (getenv <span class="org-string">"C_INCLUDE_PATH"</span>) <span class="org-string">":"</span> (string-append #$libtirpc <span class="org-string">"/include/tirpc"</span>)))
+    (setenv <span class="org-string">"LIBRARY_PATH"</span> (string-append (getenv <span class="org-string">"LIBRARY_PATH"</span>) <span class="org-string">":"</span> (string-append #$libtirpc <span class="org-string">"/lib"</span>)))
+    (setenv <span class="org-string">"LDFLAGS"</span> (string-append (<span class="org-keyword">or</span> (getenv <span class="org-string">"LDFLAGS"</span>) <span class="org-string">""</span>) <span class="org-string">" -ltirpc -lseccomp -lcap -Wl,-rpath="</span> (assoc-ref outputs <span class="org-string">"out"</span>) <span class="org-string">"/lib"</span>))
+    (setenv <span class="org-string">"CFLAGS"</span> (string-append (<span class="org-keyword">or</span> (getenv <span class="org-string">"CFLAGS"</span>) <span class="org-string">""</span>) <span class="org-string">" -DWITH_TIRPC -g"</span>))
+    (substitute* <span class="org-string">"Makefile"</span>
+    ((<span class="org-string">"^WITH_LIBELF.*no"</span>)
+    <span class="org-string">"WITH_LIBELF ?= yes"</span>))
+    (substitute* <span class="org-string">"mk/common.mk"</span>
+    ((<span class="org-string">"^REVISION.*"</span>)
+    (string-append <span class="org-string">"REVISION ?= "</span> #$version <span class="org-string">"\n"</span> <span class="org-string">"CC := gcc\n"</span>)))
+    #true) <span class="org-comment-delimiter">; </span><span class="org-comment">must return true for success</span>
+    ))
+    <span class="org-builtin">#:tests?</span> #f))
+    (native-inputs
+    (list libseccomp nvidia-modprobe which libtirpc libcap libelf git-minimal curl tar coreutils docker go gcc-toolchain rpcsvc-proto pkgconf))
+    (synopsis <span class="org-string">"Build and run containers leveraging NVIDIA GPUs"</span>)
+    (description <span class="org-string">"The NVIDIA Container Toolkit allows users to build and run GPU accelerated containers. The toolkit includes a container runtime library and utilities to automatically configure containers to leverage NVIDIA GPUs."</span>)
+    (home-page <span class="org-string">"https://github.com/NVIDIA/nvidia-container-toolkit"</span>)
+    (license asl2.0)))
+    (<span class="org-keyword">define-public</span> <span class="org-function-name">nvidia-container-toolkit</span>
+    (package
+    (name <span class="org-string">"nvidia-container-toolkit"</span>)
+    (version <span class="org-string">"1.13.1"</span>)
+    (source (origin
+    (method git-fetch)
+    (uri (git-reference
+    (url <span class="org-string">"https://github.com/NVIDIA/nvidia-container-toolkit"</span>)
+    (commit (string-append <span class="org-string">"v"</span> version))))
+    (file-name (git-file-name name version))
+    (sha256
+    (base32
+    <span class="org-string">"01gh57jfpcv07c4442lbf9wiy0l1iwl85ig9drpp0637gbkzgwa4"</span>))))
+    (build-system go-build-system)
+    (arguments
+    (list
+    <span class="org-builtin">#:import-path</span> <span class="org-string">"github.com/NVIDIA/nvidia-container-toolkit"</span>
+    <span class="org-builtin">#:phases</span>
+    #~(modify-phases %standard-phases
+    (add-after 'unpack 'fix-paths
+    (lambda* (<span class="org-builtin">#:key</span> inputs outputs <span class="org-builtin">#:allow-other-keys</span>)
+    (substitute* <span class="org-string">"src/github.com/NVIDIA/nvidia-container-toolkit/internal/config/config.go"</span>
+    ((<span class="org-string">"/usr/bin"</span>)
+    <span class="org-string">"/run/current-system/profile/bin"</span>))))
+    (replace 'build
+    (<span class="org-keyword">lambda</span> arguments
+    (<span class="org-keyword">for-each</span>
+    (<span class="org-keyword">lambda</span> (directory)
+    (apply (assoc-ref %standard-phases 'build)
+    (append arguments (list <span class="org-builtin">#:import-path</span> directory))))
+    '(<span class="org-string">"github.com/NVIDIA/nvidia-container-toolkit/cmd/nvidia-ctk"</span>
+    <span class="org-string">"github.com/NVIDIA/nvidia-container-toolkit/cmd/nvidia-container-runtime"</span>
+    <span class="org-string">"github.com/NVIDIA/nvidia-container-toolkit/cmd/nvidia-container-runtime-hook"</span>)))))
+    <span class="org-builtin">#:tests?</span> #f
+    <span class="org-builtin">#:install-source?</span> #f))
+    (propagated-inputs
+    (list libnvidia-container))
+    (synopsis <span class="org-string">"Build and run containers leveraging NVIDIA GPUs"</span>)
+    (description <span class="org-string">"The NVIDIA Container Toolkit allows users to build and run GPU accelerated containers. The toolkit includes a container runtime library and utilities to automatically configure containers to leverage NVIDIA GPUs."</span>)
+    (home-page <span class="org-string">"https://github.com/NVIDIA/nvidia-container-toolkit"</span>)
+    (license asl2.0)))
+    </pre>
+    </div>
+    </div>
+    </div>
+    <div id="outline-container-org4ec1878" class="outline-3">
+    <h3 id="org4ec1878"><span class="section-number-3">1.3.</span> Enabling nvidia-container-runtime in docker</h3>
+    <div class="outline-text-3" id="text-1-3">
+    <p>
+    Once <code>nvidia-container-toolkit</code> is built and installed, Docker will need to be made aware of the runtime. To do so modify the
+    <code>docker-service-type</code> in your system configuration and provide a <code>config-file</code> as follows:
+    </p>
+    <div class="org-src-container">
+    <pre class="src src-scheme">(service docker-service-type
+    (docker-configuration
+    (config-file (local-file <span class="org-string">"files/daemon.json"</span>))))
+    </pre>
+    </div>
+    <p>
+    where <code>daemon.json</code> contains the following:
+    </p>
+    <div class="org-src-container">
+    <pre class="src src-js">{
+    <span class="org-string">"runtimes"</span>: {
+    <span class="org-string">"nvidia"</span>: {
+    <span class="org-string">"args"</span>: [],
+    <span class="org-string">"path"</span>: <span class="org-string">"/run/current-system/profile/bin/nvidia-container-runtime"</span>
+    }
+    }
+    }
+    </pre>
+    </div>
+    </div>
+    </div>
+    <div id="outline-container-org171ceff" class="outline-3">
+    <h3 id="org171ceff"><span class="section-number-3">1.4.</span> Running an NVIDIA GPU enabled container</h3>
+    <div class="outline-text-3" id="text-1-4">
+    <p>
+    Now comes the ugly bit&#x2026;. <code>nvidia-container-toolkit</code> seems to bind mount certain binaries
+    (such as <code>nvidia-smi</code>) into the container. Having installed these previously with guix means
+    that the binaries will look for their own dependencies under <code>/gnu/store</code>. The "correct way"
+    to fix this would seem to be to identify all the binaries mounted in this way and
+    recursively bind-mount their dependencies into the container from <code>libnvidia-container</code>. I'm
+    not sure if there's a quick way to accomplish this so in the meantime the very ugly
+    workaround is to bind-mount the entire <code>/gnu/store</code> directory into each GPU enabled
+    container that you want to run. The following verifies that the approach works. We mount
+    <code>/gnu/store</code> with the <code>ro</code> flags (read-only) to make sure nothing in the container can modify
+    the store.
+    </p>
+    <div class="org-src-container">
+    <pre class="src src-shell">docker run --name pytorch -it --rm -v /gnu/store:/gnu/store:ro --runtime=nvidia -e <span class="org-variable-name">NVIDIA_DRIVER_CAPABILITIES</span>=compute,utility -e <span class="org-variable-name">NVIDIA_VISIBLE_DEVICES</span>=all --gpus all pytorch/pytorch:latest
+    </pre>
+    </div>
+    <p>
+    Then in the Python process check whether we have access to the gpu:
+    </p>
+    <pre class="example" id="org1618c64">
+    Python 3.10.13 (main, Sep 11 2023, 13:44:35) [GCC 11.2.0] on linux
+    Type "help", "copyright", "credits" or "license" for more information.
+    &gt;&gt;&gt; import torch
+    import torch
+    &gt;&gt;&gt; torch.cuda.is_available()
+    torch.cuda.is_available()
+    True
+    </pre>
+    </div>
+    </div>
+    <div id="outline-container-org576e00e" class="outline-3">
+    <h3 id="org576e00e"><span class="section-number-3">1.5.</span> Caveats</h3>
+    <div class="outline-text-3" id="text-1-5">
+    <p>
+    So how unsafe is this? Well, to my mind we're circumventing a level of isolation here and
+    giving the containers full access to all the installed programs, libraries, etc. on the
+    system. Provided the container doesn't run as root (and not as your own user), you're
+    effectively "just" increasing the attack-surface of the container with everything under
+    <code>/gnu/store</code> (of course if the container is running as root you have much larger
+    problems). That is, should any of the programs/scripts/libraries there have a
+    vulnerability that allows a privilige escalation, a potential hacker would have all the
+    tools on the system at his/her disposal to craft and execute an exploit. Of course, the
+    hacker would first have to gain a shell in the container in the first place, but that's
+    certainly not impossible. All-in-all this setup works fine to play around with GPU enabled
+    containers in Guix, but I would strongly caution against exposing any of the containers
+    you run this way to the open internet.
+    </p>
+    </div>
+    </div>
+    <div id="outline-container-org988edcc" class="outline-3">
+    <h3 id="org988edcc"><span class="section-number-3">1.6.</span> Comments</h3>
+    <div class="outline-text-3" id="text-1-6">
+    </div>
+    </div>
+    ]]></description>
+</item>
+</channel>
+</rss>
