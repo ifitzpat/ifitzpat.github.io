@@ -40,6 +40,7 @@ figcaption {
     color:#8D8D84;
     margin: auto;
     font-size: 0.8em!important;
+    margin-bottom: 2em;
 }
 
 span.figure-number {
@@ -90,8 +91,14 @@ span.figure-number {
     border: 2px solid rgb(61, 146, 201);
     text-decoration: none;
 }
+
+.sidebar > div > figure {
+    display: block!important;
+
+}
+
 #picture {
-    display: block;
+    display: block!important;
     width: 140px; /* Adjust the width and height as needed */
     height: 140px;
     border-radius: 50%; /* Creates a circle */
@@ -125,8 +132,9 @@ ol.toots {
 
 figure {
     margin: 0;
+    display: table;
 }
-
+figcaption { display: table-caption; caption-side: bottom ; }
 .sidebarlinks h3 {
     margin-left: auto;
     margin-right: auto;
@@ -230,7 +238,7 @@ pre span.org-diff-header {color: #000; font-weight: bold;}
 pre span.org-diff-hunk-header {color: #000; font-weight: bold;}
 
 .pure-g > .content {
-    padding: 2em 1em 0;
+    padding: 2em 1em 4em;
     word-wrap: break-word;
     max-width: 100%;
 }
@@ -343,7 +351,7 @@ h3 {
 
 @media (min-width: 48em) {
     .pure-g > .content {
-        padding: 2em 3em 0;
+        padding: 2em 3em 4em;
 	margin-left: 25%;
     }
 
@@ -354,7 +362,7 @@ h3 {
 
 #mainimage {
     float: right;
-    padding-left: 4em;
+    margin-left: 4em;
 }
 
 
