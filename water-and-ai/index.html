@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>On water and AI: towards sustainable practices for building AI systems</title>
+<meta name="description" content="According to a [[https://www.thetimes.com/uk/technology-uk/article/thirsty-chatgpt-uses-four-times-more-water-than-previously-thought-bc0pqswdr][recent article]] the authors behind the assertion that LLMs (GPT-3 in this case)
+consume 500 ml of water per 10-50 requests have now reportedly revised their estimate upwords by
+a factor of 4. Having a relatively novel computing paradigm at our disposal comes with opportunities, but for also with responsibilities.
+Not every problem is a nail to the LLMs hammer and, as AI carpenters, we should make sure that LLMs aren't the only tools in our toolbox." />
+<meta name="keywords" content="nvidia gpu guix guixsd docker pytorch" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://esm.sh/emfed@1/toots.css"><script type="module" src="https://esm.sh/emfed@1"></script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css" crossorigin="anonymous" /><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" crossorigin="anonymous"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/grids-responsive-min.css" /> <link rel="stylesheet" href="/css/style.css" /><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/x-icon" href="https://ianfitzpatrick.eu/favicon.ico">
+<link rel="alternate" type="application/rss+xml" href="rss.xml" title="RSS feed">
+<meta property="og:title" content="On water and AI: towards sustainable practices for building AI systems">
+<meta property="og:url" content="https://ianfitzpatrick.eu/water-and-ai/">
+<meta property="og:description" content="According to a [[https://www.thetimes.com/uk/technology-uk/article/thirsty-chatgpt-uses-four-times-more-water-than-previously-thought-bc0pqswdr][recent article]] the authors behind the assertion that LLMs (GPT-3 in this case)
+consume 500 ml of water per 10-50 requests have now reportedly revised their estimate upwords by
+a factor of 4. Having a relatively novel computing paradigm at our disposal comes with opportunities, but for also with responsibilities.
+Not every problem is a nail to the LLMs hammer and, as AI carpenters, we should make sure that LLMs aren't the only tools in our toolbox.">
+<meta property="og:image" content="https://ianfitzpatrick.eu/images/ai-bath.jpeg">
+<meta property="og:type" content="article">
+<meta property="article:author" content="nil">
+<meta property="article:published_time" content="2024-10-09T12:01:08+0200">
+<meta property="twitter:title" content="On water and AI: towards sustainable practices for building AI systems">
+<meta property="twitter:url" content="https://ianfitzpatrick.eu/water-and-ai/">
+<meta property="twitter:image" content="https://ianfitzpatrick.eu/images/ai-bath.jpeg">
+<meta property="twitter:description" content="According to a [[https://www.thetimes.com/uk/technology-uk/article/thirsty-chatgpt-uses-four-times-more-water-than-previously-thought-bc0pqswdr][recent article]] the authors behind the assertion that LLMs (GPT-3 in this case)
+consume 500 ml of water per 10-50 requests have now reportedly revised their estimate upwords by
+a factor of 4. Having a relatively novel computing paradigm at our disposal comes with opportunities, but for also with responsibilities.
+Not every problem is a nail to the LLMs hammer and, as AI carpenters, we should make sure that LLMs aren't the only tools in our toolbox.">
+<meta property="twitter:card" content="summary">
+</head>
+<body>
+<div id="content" class="content">
+<div id="layout" class="pure-g">
+
+<div id="outline-container-org1ab33c1" class="outline-2 sidebar pure-u-1 pure-u-md-1-4">
+<h2 id="org1ab33c1">Left</h2>
+<div class="outline-text-2" id="text-org1ab33c1">
+
+<figure id="org3f621fa">
+<img src="/images/me.JPG" alt="me.JPG" width="140px" height="140px" border-radius="50%" id="picture" />
+
+</figure>
+</div>
+
+<div id="outline-container-org4b8a8af" class="outline-3 sidebarlinks">
+<h3 id="org4b8a8af">Ian FitzPatrick</h3>
+<div class="outline-text-3" id="text-org4b8a8af">
+<table id="navtable">
+
+
+<colgroup>
+<col  class="org-center" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-center"><a href="https://ianfitzpatrick.eu">HOME</a></td>
+</tr>
+
+<tr>
+<td class="org-center"><a href="https://ianfitzpatrick.eu/about-me/">About Me</a></td>
+</tr>
+
+<tr>
+<td class="org-center"><a href="https://ianfitzpatrick.eu/publications/">Publications</a></td>
+</tr>
+
+<tr>
+<td class="org-center"><a href="https://ianfitzpatrick.eu/documents/CV%20Ian%20FitzPatrick.pdf">CV</a></td>
+</tr>
+</tbody>
+</table>
+
+
+<table id="contacttable">
+
+
+<colgroup>
+<col  class="org-center" />
+
+<col  class="org-center" />
+
+<col  class="org-center" />
+
+<col  class="org-center" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-center"><a href="mailto:ian@brain-bytes.nl"><i class="fa fa-envelope"></i></a></td>
+<td class="org-center"><a href="https://www.linkedin.com/in/ifitzpat/"><i class="fa-brands fa-linkedin"></i></a></td>
+<td class="org-center"><a href="https://fosstodon.org/@bionicbabelfish"><i class="fa-brands fa-mastodon fa-fw"></i></a></td>
+<td class="org-center"><a href="https://ianfitzpatrick.eu/rss.xml"><i class="fa-solid fa-square-rss"></i></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgf53a75a" class="outline-2 content pure-u-1 pure-u-md-3-4">
+<h2 id="orgf53a75a">On water and AI: towards sustainable practices</h2>
+<div class="outline-text-2" id="text-orgf53a75a">
+
+<figure id="mainimage">
+<img src="/images/ai-bath.jpeg" alt="ai-bath.jpeg" height="300" />
+
+<figcaption><span class="figure-number">Figure 1: </span>This image was generated by the author using DALL-E. Knowingly (hypocritically?) using AI in order to get his point across.</figcaption>
+</figure>
+
+<p>
+We live in a world of finite resources and a finite capacity to deal with our propensity
+to pollute her atmosphere for the sake of our creature comforts. As AI practitioners it
+should, therefore, give us pause that the authors behind the initial estimate that Large
+Language Models (LLMs) consume 500 ml per 10-50 queries now seem to think 2 L would be
+closer to the mark <sup>[<a href="#citeproc_bib_item_1">1</a>,<a href="#citeproc_bib_item_2">2</a>]</sup>. There is,
+however, still an AI baby (full of only partially realised potential) in this particular
+bath water. So it's worthwhile considering what we as AI practioners (e.g., developers,
+architects, and leaders) can do to minimise the environmental impact of our solutions.
+</p>
+</div>
+
+<div id="outline-container-orge584c79" class="outline-3">
+<h3 id="orge584c79">AI water consumption</h3>
+<div class="outline-text-3" id="text-orge584c79">
+<p>
+What makes LLMs so "thirsty" in the first place? The 500 ml (now 2 L) estimate largely
+takes into account the amount of water needed in generating power for the LLM (<i>scope-2</i>) as
+well as the amount of water needed to cool the computers that the LLMs run on in the data
+centre (<i>scope-1</i>). A third source of water consumption by AI considers water consumed
+during the full supply chain (from raw material extraction to delivery) for the
+fabrication of AI hardware (e.g., GPUs). This <i>scope-3</i> water consumption is incredibly
+difficult to ascertain (though it may be considerable) and, as such, is not included in
+the 2 L figure. Both <i>scope-1</i> and <i>scope-2</i> water consumption are highly situationally
+dependent.
+</p>
+
+<p>
+<i>Scope-2</i> water consumption is largely dependent on the power source. Most water is consumed
+by thermoelectric power plants (these accounted for 73% of the electricity generated in
+the US in 2021<sup>[<a href="#citeproc_bib_item_3">3</a>]</sup>) which use the water for cooling. Wind and solar energy
+have very low water consumption.
+</p>
+
+<p>
+The figure for <i>scope-1</i> water consumption also comes with some assumptions. Water
+circulates around the computer components in a <i>closed loop</i> that is, no water is added or
+lost. Through heat-exchange the heat from the closed loop is transferred to a cooling unit
+often using a cooling tower (which expends water through evaporation). Cooling tower
+systems often use potable water (hence extract water from their surroundings that may
+otherwise be used for consumption) in order to avoid blockages and/or bacterial
+growth. Alternative cooling solutions that are less (or minimally) reliant on water do
+exist (e.g., solar cooling, geothermal cooling).
+</p>
+
+<p>
+This all means that amount of water consumed by LLMs is inextricably tied to regional and
+data-centre specific factors. As the world starts to shift to renewable energy sources and
+alternative cooling systems, data-centre water consumption will presumably (on data-centre
+level) also lessen. That isn't to say, however, that there isn't a pressing issue to
+address in realising sustainable AI solutions.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8ec587f" class="outline-3">
+<h3 id="org8ec587f">The larger issue</h3>
+<div class="outline-text-3" id="text-org8ec587f">
+<p>
+Heat generation and, consequently, water consumption are part and parcel of "normal" data
+centre computing and, as such, not exclusive to AI computing. However, the one thing that
+LLMs (and other deep-learning based AI) add to the mix is reliance on GPUs for both
+training and inference (i.e., usage). GPUs can be particularly power hungry (thus require
+more <i>scope-1</i> water through power generation as well as <i>scope-2</i> water through extra
+generated heat). In fact, in a recent study into the carbon footprint of the <a href="https://bigscience.huggingface.co/blog/bloom">BLOOM</a>
+LLM<sup>[<a href="#citeproc_bib_item_4">4</a>]</sup> they estimate that during inference,
+CPU compute accounts for about 2% of the total power consumption, while GPU takes up a
+whopping 75.3% (the remaining source being RAM at 22%).
+</p>
+
+<p>
+Even so, water consumption by LLMs is part of a larger problem. Computing inefficiency is
+wasteful (AI or not). Inefficient code generates more CPU load, which leads to more energy
+use and, in data centres, more water usage.
+</p>
+
+<p>
+Put succinctly:
+</p>
+<a class="mastodon-thread" target="_blank"
+                                  href="https://thingy.social/@malcircuit/113232742009757478"
+                                  data-toot-id="113232742009757478"
+				  data-exclude-replies="true"
+				  data-exclude-reblogs="true"
+                                  data-exclude-post="false"
+                                  >Turn on JavaScript to view comments, or follow this link to the Mastodon thread</a>
+
+<p>
+Compounding the problem is the fact that time spent refactoring an established (and
+working) code base to make it more computationally efficient is sometimes difficult to
+justify to stakeholders. How much time should you invest? Is there a financial business
+case (probably yes, but how do you quantify that?)? Consequently, (and admittedly
+anecdotally), large amounts of "quick-and-dirty" inefficient code remain in production and
+consume more power and water than is necessary: "There is nothing so permanent as a
+temporary solution".
+</p>
+
+<p>
+LLM enthusiasts might, legitimately, point to the fact that idling PCs are also
+wasteful. Thus, while someone is sat staring at a monitor waiting for inspiration,
+valuable computing resources burn away silently. To my knowledge no one has yet examined
+the extent to which this (the power saved by humans more efficiently executing tasks with
+the help of an LLM) offsets the power consumed by the LLM inference involved. But however
+much this may be, it should not exempt us from the duty to ensure our AI solutions do not
+unnecessarily consume resources.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4962d55" class="outline-3">
+<h3 id="org4962d55">Sustainable practices</h3>
+<div class="outline-text-3" id="text-org4962d55">
+<p>
+When pressed for comment on GPT-3's high water consumption OpenAI's response was that they
+continue to invest in ways to make their models more
+efficient<sup>[<a href="#citeproc_bib_item_1">1</a>]</sup>. Indeed, along with more sustainable data-centres (see
+above) initiatives to optimise current LLM architectures are likely to bear fruit so long
+as future LLM architectures (or model sizes) do not introduce new inefficiencies. We are
+currently witnessing a nigh on <a href="https://en.wikipedia.org/wiki/Cambrian_explosion">Cambrian Explosion</a> of LLMs. Some of these dwarf even
+ChatGPT in terms of scale while others are small enough to run on edge devices and/or lend
+themselves to CPU-based inference. Thus, when it comes to model selection, AI
+practitioners are certainly not spoiled for choice.
+</p>
+
+<p>
+Choosing the right model for the right job isn't the only lever at the disposal of the AI
+engineer, however. In many use-cases LLMs are, ultimately, only components in a broader
+(AI/IT) architecture. While it might be tempting to use LLMs in multiple places for quick
+and easy results, expending a bit more thought and, yes, effort on <a href="https://en.wikipedia.org/wiki/Neuro-symbolic_AI">hybrid AI</a> solutions
+might yield approximately equal (or sometimes even superior) results, at much less cost to
+the environment. These approaches typically even have the added benefit of being more
+explainable than LLMs alone.
+</p>
+
+<p>
+We would also do well to recognise that not every problem needs a power-hungry AI to
+solve<sup>[cf. <a href="#citeproc_bib_item_5">5</a>,<a href="#citeproc_bib_item_6">6</a>]</sup>. I am convinced that pushing
+technology for the sake of technology is ultimately sell-defeating. Real solutions
+addressing actual (business/consumer/patient/etc.) problems will have the most staying
+power. As AI practitioners we may have one or two extra tools in our toolbox to help us
+build those solutions, but we should be mindful for over-reliance on those tools (and the
+resource burden the entail).
+</p>
+
+<p>
+To sum up, as practitioners we can:
+</p>
+
+<ul class="org-ul">
+<li>carefully choose our use-cases: Does it really need/warrant AI? Are there less
+compute-intensive methods we could use?</li>
+<li>carefully evaluate AI components in the solution: Is each necessary or merely a
+short-cut?</li>
+<li>run and train our models in data-centres powered with renewables (in so far as we have
+the choice)</li>
+<li>opt for the smallest model that can do the job</li>
+<li>consider CPU-based inference if time-constraints allow</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfdfb68b" class="outline-3">
+<h3 id="orgfdfb68b">Comments</h3>
+<div class="outline-text-3" id="text-orgfdfb68b">
+<a class="mastodon-thread" target="_blank"
+                                  href="https://fosstodon.org/@bionicbabelfish/113238128491302626"
+                                  data-toot-id="113238128491302626"
+                                  data-exclude-post="true"
+                                  >Turn on JavaScript to view comments, or follow this link to the Mastodon thread</a>
+                               <p>You can <a target="_blank" href="https://fosstodon.org/@bionicbabelfish/113238128491302626">add a comment on Mastodon</a>.</p>
+</div>
+</div>
+
+<div id="outline-container-org6233eab" class="outline-3">
+<h3 id="org6233eab">References</h3>
+<div class="outline-text-3" id="text-org6233eab">
+<style>.csl-entry{text-indent: -1.5em; margin-left: 1.5em;}</style><div class="csl-bib-body">
+  <div class="csl-entry"><a id="citeproc_bib_item_1"></a>1. Sellman, M., &#38; Vaughan, A. (2024). “Thirsty” chatgpt uses four times more water than previously thought. <i>The Times</i>. <a href="https://www.thetimes.com/uk/technology-uk/article/thirsty-chatgpt-uses-four-times-more-water-than-previously-thought-bc0pqswdr">https://www.thetimes.com/uk/technology-uk/article/thirsty-chatgpt-uses-four-times-more-water-than-previously-thought-bc0pqswdr</a></div>
+  <div class="csl-entry"><a id="citeproc_bib_item_2"></a>2. Li, P., Yang, J., Islam, M. A., &#38; Ren, S. (2023). <i>Making ai less “thirsty”: Uncovering and addressing the secret water footprint of ai models</i>. <a href="https://arxiv.org/abs/2304.03271">https://arxiv.org/abs/2304.03271</a></div>
+  <div class="csl-entry"><a id="citeproc_bib_item_3"></a>3. U.S. Energy Information Administration. (2023). <i>U.s. electric power sector continues water efficiency gains</i>. <a href="https://www.eia.gov/todayinenergy/detail.php?id=56820">https://www.eia.gov/todayinenergy/detail.php?id=56820</a></div>
+  <div class="csl-entry"><a id="citeproc_bib_item_4"></a>4. Luccioni, A. S., Viguier, S., &#38; Ligozat, A.-L. (2022). <i>Estimating the carbon footprint of bloom, a 176b parameter language model</i>. <a href="https://arxiv.org/abs/2211.02001">https://arxiv.org/abs/2211.02001</a></div>
+  <div class="csl-entry"><a id="citeproc_bib_item_5"></a>5. Redmann, A., &#38; FitzPatrick, I. (2023). Conversational ai: Llms are not all you need. <i>Dixit: Tijdschrift over Toegepaste Taal- En Spraaktechnologie</i>, <i>20</i>, 5–8. <a href="https://notas.nl/dixit/dixit_2023_conversational_ai.pdf">https://notas.nl/dixit/dixit_2023_conversational_ai.pdf</a></div>
+  <div class="csl-entry"><a id="citeproc_bib_item_6"></a>6. FitzPatrick, I. (2022). Large language models: geen silver bullet. <i>Dixit: Tijdschrift over Toegepaste Taal- En Spraaktechnologie</i>, <i>19</i>, 28–29. <a href="https://notas.nl/dixit/dixit_2022_tst_en_big-models.pdf">https://notas.nl/dixit/dixit_2022_tst_en_big-models.pdf</a></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

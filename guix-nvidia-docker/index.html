@@ -30,19 +30,19 @@ GNU Guix. The solution includes a workaround involving the bind mounting of =/gn
 <div id="content" class="content">
 <div id="layout" class="pure-g">
 
-<div id="outline-container-org8ab92a3" class="outline-2 sidebar pure-u-1 pure-u-md-1-4">
-<h2 id="org8ab92a3">Left</h2>
-<div class="outline-text-2" id="text-org8ab92a3">
+<div id="outline-container-orge020fd1" class="outline-2 sidebar pure-u-1 pure-u-md-1-4">
+<h2 id="orge020fd1">Left</h2>
+<div class="outline-text-2" id="text-orge020fd1">
 
-<figure id="org4381cb7">
+<figure id="org9fe7597">
 <img src="/images/me.JPG" alt="me.JPG" width="140px" height="140px" border-radius="50%" id="picture" />
 
 </figure>
 </div>
 
-<div id="outline-container-orge316c81" class="outline-3 sidebarlinks">
-<h3 id="orge316c81">Ian FitzPatrick</h3>
-<div class="outline-text-3" id="text-orge316c81">
+<div id="outline-container-orgbe916f7" class="outline-3 sidebarlinks">
+<h3 id="orgbe916f7">Ian FitzPatrick</h3>
+<div class="outline-text-3" id="text-orgbe916f7">
 <table id="navtable">
 
 
@@ -94,9 +94,9 @@ GNU Guix. The solution includes a workaround involving the bind mounting of =/gn
 </div>
 </div>
 
-<div id="outline-container-orge850f9d" class="outline-2 content pure-u-1 pure-u-md-3-4">
-<h2 id="orge850f9d">Running NVIDIA GPU enabled containers in GNU Guix</h2>
-<div class="outline-text-2" id="text-orge850f9d">
+<div id="outline-container-org8033ccc" class="outline-2 content pure-u-1 pure-u-md-3-4">
+<h2 id="org8033ccc">Running NVIDIA GPU enabled containers in GNU Guix</h2>
+<div class="outline-text-2" id="text-org8033ccc">
 
 <figure id="mainimage">
 <img src="/images/gnu-with-nvidia.jpeg" alt="gnu-with-nvidia.jpeg" height="300" />
@@ -115,9 +115,9 @@ case, but any input on how to do this the Right Way<sup>tm</sup> would be apprec
 </p>
 </div>
 
-<div id="outline-container-orga57b887" class="outline-3">
-<h3 id="orga57b887">Patching libnvidia-container</h3>
-<div class="outline-text-3" id="text-orga57b887">
+<div id="outline-container-org33d7c1e" class="outline-3">
+<h3 id="org33d7c1e">Patching libnvidia-container</h3>
+<div class="outline-text-3" id="text-org33d7c1e">
 <p>
 While building <code>libnvidia-container</code> appeared simple enough it continued to throw up errors
 when I tried to start a container. Fortunately the good folk over at <a href="https://nixos.org">Nix</a> already had a
@@ -253,9 +253,9 @@ with the guix package definition (below).
 </div>
 </div>
 
-<div id="outline-container-orgfa5c2b2" class="outline-3">
-<h3 id="orgfa5c2b2">Guix package definitions</h3>
-<div class="outline-text-3" id="text-orgfa5c2b2">
+<div id="outline-container-orgfb20b2b" class="outline-3">
+<h3 id="orgfb20b2b">Guix package definitions</h3>
+<div class="outline-text-3" id="text-orgfb20b2b">
 <p>
 Now we can specify the required guix packages. Credits to <a href="https://gitlab.com/psyleft">Connor Clark</a> and <a href="https://gitlab.com/lucianolaratelli">Luciano Laratelli</a> for the initial work.
 </p>
@@ -445,9 +445,9 @@ Now we can specify the required guix packages. Credits to <a href="https://gitla
 </div>
 </div>
 
-<div id="outline-container-orgb3a94ab" class="outline-3">
-<h3 id="orgb3a94ab">Enabling nvidia-container-runtime in docker</h3>
-<div class="outline-text-3" id="text-orgb3a94ab">
+<div id="outline-container-org001c7bb" class="outline-3">
+<h3 id="org001c7bb">Enabling nvidia-container-runtime in docker</h3>
+<div class="outline-text-3" id="text-org001c7bb">
 <p>
 Once <code>nvidia-container-toolkit</code> is built and installed, Docker will need to be made aware of the runtime. To do so modify the
 <code>docker-service-type</code> in your system configuration and provide a <code>config-file</code> as follows:
@@ -472,9 +472,9 @@ where <code>daemon.json</code> contains the following:
 </div>
 </div>
 
-<div id="outline-container-org92b12b4" class="outline-3">
-<h3 id="org92b12b4">Running an NVIDIA GPU enabled container</h3>
-<div class="outline-text-3" id="text-org92b12b4">
+<div id="outline-container-orge1cedb4" class="outline-3">
+<h3 id="orge1cedb4">Running an NVIDIA GPU enabled container</h3>
+<div class="outline-text-3" id="text-orge1cedb4">
 <p>
 Now comes the ugly bit&#x2026;. <code>nvidia-container-toolkit</code> seems to bind mount certain binaries
 (such as <code>nvidia-smi</code>) into the container. Having installed these previously with guix means
@@ -494,7 +494,7 @@ the store.
 Then in the Python process check whether we have access to the gpu:
 </p>
 
-<pre class="example" id="org17ebebe">
+<pre class="example" id="org215af58">
 Python 3.10.13 (main, Sep 11 2023, 13:44:35) [GCC 11.2.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 &gt;&gt;&gt; import torch
@@ -506,9 +506,9 @@ True
 </div>
 </div>
 
-<div id="outline-container-org6176327" class="outline-3">
-<h3 id="org6176327">Caveats</h3>
-<div class="outline-text-3" id="text-org6176327">
+<div id="outline-container-org8f9f836" class="outline-3">
+<h3 id="org8f9f836">Caveats</h3>
+<div class="outline-text-3" id="text-org8f9f836">
 <p>
 So how unsafe is this? Well, to my mind we're circumventing a level of isolation here and
 giving the containers full access to all the installed programs, libraries, etc. on the
@@ -526,9 +526,9 @@ you run this way to the open internet.
 </div>
 </div>
 
-<div id="outline-container-orge1cc1ce" class="outline-3">
-<h3 id="orge1cc1ce">Comments</h3>
-<div class="outline-text-3" id="text-orge1cc1ce">
+<div id="outline-container-org1b29539" class="outline-3">
+<h3 id="org1b29539">Comments</h3>
+<div class="outline-text-3" id="text-org1b29539">
 <a class="mastodon-thread" target="_blank"
                                   href="https://fosstodon.org/@bionicbabelfish/113238128491302626"
                                   data-toot-id="113238128491302626"
